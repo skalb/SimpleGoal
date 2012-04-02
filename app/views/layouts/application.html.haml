@@ -3,22 +3,22 @@
   %head
     %title Simple Goal
     = csrf_meta_tag
+    = javascript_include_tag :defaults
   %body
     #container
       #header
         %h1
           %a{:href => "/"} Simple Goal
         #user-navigation
-          %ul.wat-cf
-            %li
-              %a{:href => "#"}= t("web-app-theme.profile", :default => "Profile")
-            %li
-              %a{:href => "#"}= t("web-app-theme.settings", :default => "Settings")
-            %li
-              %a.logout{:href => "/logout"}= t("web-app-theme.logout", :default => "Logout")
+          - if user_signed_in?
+            = "Signed in as #{current_user.email} Not you?"
+            = link_to "Sign out", destroy_user_session_path, :method => :delete
+          - else 
+            = link_to "Sign up", new_user_registration_path
+            or 
+            = link_to "sign in", new_user_session_path
         #main-navigation
-          %ul.wat-cf
-      #wrapper.wat-cf
+      #wrapper
         .flash
           - flash.each do |type, message|
             %div{:class => "message #{type}"}
@@ -26,8 +26,3 @@
         #main
           = yield
           #footer
-            .block
-              %p
-                Copyright &copy; #{Time.now.year} Simple Goal.
-        #sidebar
-          = yield :sidebar

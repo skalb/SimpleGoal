@@ -58,6 +58,7 @@ module SimpleGoal
 
     config.to_prepare do
       Devise::SessionsController.layout "sign"
+      Devise::RegistrationsController.layout "sign"
     end
   end
 end
