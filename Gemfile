@@ -35,6 +35,8 @@ end
 gem 'eco' 
 gem 'ejs' 
 gem 'spine-rails'
+gem 'factory_girl_rails'
+gem 'database_cleaner'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

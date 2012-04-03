@@ -29,11 +29,6 @@ class GoalsController < ApplicationController
     end
   end
 
-  # GET /goals/1/edit
-  def edit
-    @goal = Goal.find(params[:id])
-  end
-
   # POST /goals
   # POST /goals.json
   def create
@@ -55,7 +50,7 @@ class GoalsController < ApplicationController
 
     respond_to do |format|
       if @goal.update_attributes(params[:goal])
-        format.json { head :no_content }
+        format.json { render json: @goal, status: :updated, location: @goal }
       else
         format.json { render json: @goal.errors, status: :unprocessable_entity }
       end

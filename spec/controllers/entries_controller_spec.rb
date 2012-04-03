@@ -38,7 +38,7 @@ describe EntriesController do
   describe "GET index" do
     it "assigns all entries as @entries" do
       entry = Entry.create! valid_attributes
-      get :index, {}, valid_session, :format => :json
+      get :index, {}, :format => :json
       assigns(:entries).should eq([entry])
     end
   end
