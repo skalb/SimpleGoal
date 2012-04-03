@@ -11,7 +11,27 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120402210654) do
+ActiveRecord::Schema.define(:version => 20120403001056) do
+
+  create_table "entries", :force => true do |t|
+    t.datetime "date"
+    t.float    "value"
+    t.integer  "goal_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "entries", ["goal_id"], :name => "index_entries_on_goal_id"
+
+  create_table "goals", :force => true do |t|
+    t.string   "name"
+    t.float    "value"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "goals", ["user_id"], :name => "index_goals_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
