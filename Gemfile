@@ -32,6 +32,9 @@ group :development, :test do
   gem 'ruby_parser'
 end
 
+gem 'eco' 
+gem 'ejs' 
+gem 'spine-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
