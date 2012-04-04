@@ -8,8 +8,6 @@
   %body
     #container
       #header
-        %h1
-          %a{:href => "/"} Simple Goal
         #user-navigation
           - if user_signed_in?
             = "Signed in as #{current_user.email} Not you?"

@@ -1,8 +1,8 @@
 class CreateEntries < ActiveRecord::Migration
   def change
     create_table :entries do |t|
-      t.datetime :date
       t.float :value
+      t.datetime :date
       t.references :goal
 
       t.timestamps

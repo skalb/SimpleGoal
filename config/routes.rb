@@ -1,5 +1,6 @@
 SimpleGoal::Application.routes.draw do
   resources :goals
+  resources :targets
   resources :entries
 
   devise_for :users

@@ -11,11 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120403001056) do
+ActiveRecord::Schema.define(:version => 20120404215723) do
 
   create_table "entries", :force => true do |t|
-    t.datetime "date"
     t.float    "value"
+    t.datetime "date"
     t.integer  "goal_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -25,13 +25,22 @@ ActiveRecord::Schema.define(:version => 20120403001056) do
 
   create_table "goals", :force => true do |t|
     t.string   "name"
-    t.float    "value"
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   add_index "goals", ["user_id"], :name => "index_goals_on_user_id"
+
+  create_table "targets", :force => true do |t|
+    t.float    "value"
+    t.datetime "date"
+    t.integer  "goal_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "targets", ["goal_id"], :name => "index_targets_on_goal_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

@@ -1,3 +1,3 @@
 class App.Goal extends Spine.Model
-  @configure 'Goal', 'name', 'value'
+  @configure 'Goal', 'name'
   @extend Spine.Model.Ajax
