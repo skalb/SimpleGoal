@@ -1,0 +1,12 @@
+<h1>Listing Targets</h1>
+
+<% for target in @targets: %>
+  <div class="item" data-id="<%= target.id %>">
+    <a data-type="show"><%= target.value %></a>
+    
+    <a data-type="edit">Edit</a> 
+    <a data-type="destroy">Destroy</a>
+  </div>
+<% end %>
+
+<p><a data-type="new">New Target</a></p>

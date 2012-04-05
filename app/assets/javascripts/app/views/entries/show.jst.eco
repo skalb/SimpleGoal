@@ -1,0 +1,7 @@
+<h1>Show Entry</h1>
+
+<a data-type="edit">Edit</a> <a data-type="back">Back</a>
+
+<p>Value: <%= @value %></p>
+<p>Date: <%= @date %></p>
+<p>Goal: <%= @goal_id %></p>

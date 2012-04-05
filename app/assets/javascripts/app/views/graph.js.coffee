@@ -1,4 +1,4 @@
-window.onload = window.create_graph = @create_graph = -> 
+window.onload = window.create_graph = @create_graph = (goal, targets, entries) -> 
 
 
 
