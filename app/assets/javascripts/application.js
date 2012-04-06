@@ -17,5 +17,6 @@
 //= require_tree .
 //= require jquery.jqplot
 //= require jqplot.cursor.min
+//= require jqplot.canvasOverlay.min
 //= require jqplot.dateAxisRenderer.min
 //= require jqplot.highlighter.min
