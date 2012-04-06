@@ -17,6 +17,8 @@ class App extends Spine.Controller
     
     # Initialize controllers:
     @append(@goals = new App.Goals)
+    @append(@entries = new App.Entries)
+    @append(@targets = new App.Targets)
     #  ...
     
     Spine.Route.setup()    

@@ -12,5 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require app
 //= require_tree .
+//= require jquery.jqplot
+//= require jqplot.cursor.min
+//= require jqplot.dateAxisRenderer.min
+//= require jqplot.highlighter.min

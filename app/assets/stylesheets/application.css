@@ -10,8 +10,19 @@
  *
  *= require_self
  *= require_tree .
+ *= require jquery-ui
 */
 
 .stack > *:not(.active) {
   display: none;
+}
+
+#user-navigation {
+  position: fixed;
+  right: 5px;
+  bottom: 5px;
+}
+
+#popupDialog {
+	display: none;
 }

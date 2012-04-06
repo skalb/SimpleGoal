@@ -1,6 +1,11 @@
-<h1>Show Goal</h1>
-
-<a data-type="edit">Edit</a> <a data-type="back">Back</a>
-
-<p>Name: <%= @name %></p>
-
+<div id="popupDialog" title="Set a target">
+  <p>
+     <label for="widgetName">Please input a target:</label>
+  </p>
+  <p>
+     Target: <input type="text" id="target" />
+  </p>
+  <p>
+     Date: <input type="text" id="date" />
+  </p>
+</div>

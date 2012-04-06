@@ -67,6 +67,7 @@ class Show extends Spine.Controller
 
   render: ->
     @html @view('goals/show')(@item)
+    window.graphGoal(@item)
 
   edit: ->
     @navigate '/goals', @item.id, 'edit'

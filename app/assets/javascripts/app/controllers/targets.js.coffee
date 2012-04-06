@@ -88,7 +88,7 @@ class Index extends Spine.Controller
     
   render: =>
     targets = Target.all()
-    @html @view('targets/index')(targets: targets)
+    # @html @view('targets/index')(targets: targets)
     
   edit: (e) ->
     item = $(e.target).item()
