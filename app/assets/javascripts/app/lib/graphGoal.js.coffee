@@ -11,10 +11,9 @@ window.graphGoal = @graphGoal = (goal) ->
 @drawEntries = (goal, targets, entries) ->
   entryLine = entries.map (entry) -> [ window.formatDate(entry.date), entry.value ]
 
-  index = 0
   horizontalLines = targets.map (target) -> 
     horizontalLine:
-      name: "hl#{index}" 
+      name: target.id.toString()
       y: target.value
       lineWidth: 5
       color: "rgb(100, 55, 124)"
@@ -54,6 +53,34 @@ window.graphGoal = @graphGoal = (goal) ->
       show: true
       objects: horizontalLines
   plot = $.jqplot("chart", [ entryLine ], options)
+
+  canvasOverlay = null
+  currentTargetLine = null
+  currentCanvasLine = null
+  $('#chart').bind "jqplotMouseDown", (ev, seriesIndex, pointIndex, data) ->
+    currentTargetLine = findClosestTargetLine(targets, pointIndex.yaxis)
+    canvasOverlay = plot.plugins.canvasOverlay;
+    currentCanvasLine = canvasOverlay.get(currentTargetLine.id.toString());
+
+  $('#chart').bind "jqplotMouseMove", (ev, seriesIndex, pointIndex, data) ->
+    if currentTargetLine
+      currentCanvasLine.options.y = pointIndex.yaxis 
+      currentTargetLine.value = pointIndex.yaxis
+      currentTargetLine.save()
+      canvasOverlay.draw(plot);
+
+  $('#chart').bind "jqplotMouseUp", (ev, seriesIndex, pointIndex, data) ->
+    currentTargetLine = null
+
+@findClosestTargetLine = (targets, y) ->
+  min = Number.MAX_VALUE
+  for target in targets
+    dist = Math.abs(target.value - y)
+    if (dist < min)
+      min = dist
+      minTarget = target
+
+  if (min < 1.0) then return minTarget else return null
 
 @getFirstTarget = (goal) ->
   $("#popupDialog").show().dialog
