@@ -6,8 +6,6 @@ window.graphGoal = @graphGoal = (goal) ->
 
   if targets.length == 0 then getFirstTarget(goal) else drawEntries(goal, targets, entries)
 
-  # line1 = [ [ "23-May-08", 578.55 ], [ "20-Jun-08", 566.5 ], [ "25-Jul-08", 480.88 ], [ "22-Aug-08", 509.84 ], [ "26-Sep-08", 454.13 ], [ "24-Oct-08", 379.75 ], [ "21-Nov-08", 303 ], [ "26-Dec-08", 308.56 ], [ "23-Jan-09", 299.14 ], [ "20-Feb-09", 346.51 ], [ "20-Mar-09", 325.99 ], [ "24-Apr-09", 386.15 ] ]
-
 @drawEntries = (goal, targets, entries) ->
   entryLine = entries.map (entry) -> [ window.formatDate(entry.date), entry.value ]
 
@@ -15,7 +13,7 @@ window.graphGoal = @graphGoal = (goal) ->
     horizontalLine:
       name: target.id.toString()
       y: target.value
-      lineWidth: 5
+      lineWidth: 10
       color: "rgb(100, 55, 124)"
       shadow: true
       xOffset: 0 
@@ -27,7 +25,7 @@ window.graphGoal = @graphGoal = (goal) ->
 
   yMax = Math.max allValues...
 
-  yMax = Math.floor(yMax * 1.2 / 10) * 10
+  yMax = Math.floor(yMax * 1.1 / 10) * 10
 
   options = 
     title: goal.name
@@ -49,6 +47,7 @@ window.graphGoal = @graphGoal = (goal) ->
     #   show: true
     noDataIndicator:
       show: true
+      indicator: ''
     canvasOverlay:
       show: true
       objects: horizontalLines
