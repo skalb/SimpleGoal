@@ -7,7 +7,8 @@ window.graphGoal = @graphGoal = (goal) ->
   if targets.length == 0 then getFirstTarget(goal) else drawEntries(goal, targets, entries)
 
 @drawEntries = (goal, targets, entries) ->
-  entryLine = entries.map (entry) -> [ window.formatDate(entry.date), entry.value ]
+  entryLine = entries.map (entry) -> 
+    [ (new Date(entry.date)).getTime(), entry.value ]
 
   allValues = []
   for a in [targets, entries]
@@ -16,7 +17,7 @@ window.graphGoal = @graphGoal = (goal) ->
 
   yMax = Math.max allValues...
 
-  yMax = Math.floor(yMax * 1.1 / 10) * 10
+  yMax = Math.ceil(yMax * 1.1 / 10) * 10
 
   options = 
     title: goal.name
@@ -28,7 +29,7 @@ window.graphGoal = @graphGoal = (goal) ->
       yaxis:
         min: 0
         max: yMax
-        tickInterval: Math.floor(yMax / 100) * 10
+        tickInterval: yMax / 10
         tickOptions:
           formatString: "%.2f"
     # highlighter:
@@ -42,36 +43,66 @@ window.graphGoal = @graphGoal = (goal) ->
     canvasOverlay:
       show: true
       objects: getHorizontalLines(targets)
-  plot = $.jqplot("chart", [ entryLine ], options)
+    captureRightClick: true
+  plot = $.jqplot("chart", [entryLine], options)
 
-  canvasOverlay = null
+  canvasOverlay = plot.plugins.canvasOverlay;
   currentTargetLine = null
   currentCanvasLine = null
   $('#chart').bind "jqplotMouseDown", (ev, seriesIndex, pointIndex, data) ->
-    currentTargetLine = findClosestTargetLine(targets, pointIndex.yaxis)
-    if currentTargetLine
-      canvasOverlay = plot.plugins.canvasOverlay;
-      currentCanvasLine = canvasOverlay.get(currentTargetLine.id.toString());
+    if ev.which == 1
+      currentTargetLine = findClosestTargetLine(targets, pointIndex.yaxis)
+      if currentTargetLine
+        currentCanvasLine = canvasOverlay.get(currentTargetLine.value.toString());
 
   $('#chart').bind "jqplotMouseMove", (ev, seriesIndex, pointIndex, data) ->
-    if currentTargetLine
-      currentCanvasLine.options.y = pointIndex.yaxis 
-      currentTargetLine.value = pointIndex.yaxis
-      currentTargetLine.save()
-      canvasOverlay.draw(plot);
+    if ev.which == 1
+      if currentTargetLine
+        currentCanvasLine.options.y = pointIndex.yaxis 
+        currentTargetLine.value = pointIndex.yaxis
+        currentTargetLine.save()
+        canvasOverlay.draw(plot);
 
   $('#chart').bind "jqplotMouseUp", (ev, seriesIndex, pointIndex, data) ->
-    currentTargetLine = null
+    if ev.which == 1
+      currentTargetLine = null
+
+  $('#chart').bind "jqplotRightClick", (ev, seriesIndex, pointIndex, data) ->
+    if ev.which == 3
+      targetLine = findClosestTargetLine(targets, pointIndex.yaxis)
+      if (targetLine)
+        removeCanvasLine(canvasOverlay, targetLine.value.toString())
+        targetLine.destroy()
+      else
+        newTarget = new App.Target(
+          goal_id: goal.id
+          value: pointIndex.yaxis
+        )
+        newTarget.save()
+        canvasOverlay.addHorizontalLine(getHoriztonalLine(newTarget))
+        targets.push(newTarget)
+
+      canvasOverlay.draw(plot)    
+
+@removeCanvasLine = (canvasOverlay, targetValue) ->
+  newObjects = []
+  for line in canvasOverlay.objects
+    if line.options.name != targetValue
+      newObjects.push(line)
+  canvasOverlay.objects = newObjects
 
 @getHorizontalLines = (targets) ->
   horizontalLines = targets.map (target) -> 
     horizontalLine:
-      name: target.id.toString()
-      y: target.value
-      lineWidth: 10
-      color: "rgb(100, 55, 124)"
-      shadow: true
-      xOffset: 0   
+      getHoriztonalLine(target)
+
+@getHoriztonalLine = (target) -> 
+  name: target.value.toString()
+  y: target.value
+  lineWidth: 10
+  color: "rgb(100, 55, 124)"
+  shadow: true
+  xOffset: 0  
 
 @findClosestTargetLine = (targets, y) ->
   min = Number.MAX_VALUE

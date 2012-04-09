@@ -3440,6 +3440,7 @@
             var evt = $.Event('jqplotClick');
             evt.pageX = ev.pageX;
             evt.pageY = ev.pageY;
+            evt.which = ev.which;
             $(this).trigger(evt, [positions.gridPos, positions.dataPos, neighbor, p]);
         };
         
@@ -3452,6 +3453,7 @@
             var evt = $.Event('jqplotDblClick');
             evt.pageX = ev.pageX;
             evt.pageY = ev.pageY;
+            evt.which = ev.which;
             $(this).trigger(evt, [positions.gridPos, positions.dataPos, neighbor, p]);
         };
         
@@ -3462,6 +3464,7 @@
             var evt = $.Event('jqplotMouseDown');
             evt.pageX = ev.pageX;
             evt.pageY = ev.pageY;
+            evt.which = ev.which;
             $(this).trigger(evt, [positions.gridPos, positions.dataPos, neighbor, p]);
         };
         
@@ -3470,6 +3473,7 @@
             var evt = $.Event('jqplotMouseUp');
             evt.pageX = ev.pageX;
             evt.pageY = ev.pageY;
+            evt.which = ev.which;
             $(this).trigger(evt, [positions.gridPos, positions.dataPos, null, ev.data.plot]);
         };
         
@@ -3482,12 +3486,14 @@
                 var evt = $.Event('jqplotRightClick');
                 evt.pageX = ev.pageX;
                 evt.pageY = ev.pageY;
+	            evt.which = ev.which;
                     $(this).trigger(evt, [positions.gridPos, positions.dataPos, neighbor, p]);
                 }
                 else {
                 var evt = $.Event('jqplotMouseUp');
                 evt.pageX = ev.pageX;
                 evt.pageY = ev.pageY;
+	            evt.which = ev.which;
                     $(this).trigger(evt, [positions.gridPos, positions.dataPos, neighbor, p]);
                 }
             }
@@ -3500,6 +3506,7 @@
             var evt = $.Event('jqplotMouseMove');
             evt.pageX = ev.pageX;
             evt.pageY = ev.pageY;
+            evt.which = ev.which;
             $(this).trigger(evt, [positions.gridPos, positions.dataPos, neighbor, p]);
         };
         
