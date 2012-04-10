@@ -8,4 +8,6 @@ class SimpleGoal.Models.Entry extends Backbone.Model
 
 class SimpleGoal.Collections.EntriesCollection extends Backbone.Collection
   model: SimpleGoal.Models.Entry
-  url: '/entries'
+  initialize: (models, args) ->
+    @url = ->
+      args.goal_url + "/entries"

@@ -20,9 +20,9 @@ class SimpleGoal.Routers.GoalsRouter extends Backbone.Router
 
   show: (id) ->
     goal = @goals.get(id)
-
-    @view = new SimpleGoal.Views.Goals.ShowView(model: goal)
-    $("#goals").html(@view.render().el)
+    goal.targets.fetch success: ->
+      goal.entries.fetch success: ->
+        window.graphGoal(goal)
 
   edit: (id) ->
     goal = @goals.get(id)

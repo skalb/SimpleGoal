@@ -8,4 +8,6 @@ class SimpleGoal.Models.Target extends Backbone.Model
 
 class SimpleGoal.Collections.TargetsCollection extends Backbone.Collection
   model: SimpleGoal.Models.Target
-  url: '/targets'
+  initialize: (models, args) ->
+    @url = ->
+      args.goal_url + "/targets"

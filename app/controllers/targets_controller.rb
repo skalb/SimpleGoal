@@ -13,7 +13,7 @@ class TargetsController < ApplicationController
   # GET /targets/1
   # GET /targets/1.json
   def show
-    @target = Target.find(params[:id])
+    @target = Target.where(:id => params[:id], :goal_id => params[:goal_id])
 
     respond_to do |format|
       format.html # show.html.erb
