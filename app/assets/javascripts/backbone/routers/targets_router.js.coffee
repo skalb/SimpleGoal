@@ -4,10 +4,10 @@ class SimpleGoal.Routers.TargetsRouter extends Backbone.Router
     @targets.reset options.targets
 
   routes:
-    "/new"      : "newTarget"
-    "/index"    : "index"
-    "/:id/edit" : "edit"
-    "/:id"      : "show"
+    "new"      : "newTarget"
+    "index"    : "index"
+    ":id/edit" : "edit"
+    ":id"      : "show"
     ".*"        : "index"
 
   newTarget: ->

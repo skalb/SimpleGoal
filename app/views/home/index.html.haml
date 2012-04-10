@@ -1,6 +1,6 @@
-#app
+#goals
   :javascript
-    jQuery(function(){
-      // onready, instantiate App
-      App.init();
+    $(function() {
+      window.router = new SimpleGoal.Routers.GoalsRouter({goals: #{@goals.to_json.html_safe}});
+      Backbone.history.start();
     });

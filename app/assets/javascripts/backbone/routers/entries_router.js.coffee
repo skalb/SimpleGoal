@@ -4,10 +4,10 @@ class SimpleGoal.Routers.EntriesRouter extends Backbone.Router
     @entries.reset options.entries
 
   routes:
-    "/new"      : "newEntry"
-    "/index"    : "index"
-    "/:id/edit" : "edit"
-    "/:id"      : "show"
+    "new"      : "newEntry"
+    "index"    : "index"
+    ":id/edit" : "edit"
+    ":id"      : "show"
     ".*"        : "index"
 
   newEntry: ->
