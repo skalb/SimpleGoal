@@ -30,8 +30,8 @@ window.graphGoal = @graphGoal = (goal) ->
         min: 0
         max: yMax
         tickInterval: yMax / 10
-        tickOptions:
-          formatString: "%.2f"
+        # tickOptions:
+          # formatString: "%.2f"
     # highlighter:
     #   show: true
     #   sizeAdjust: 7.5
@@ -46,7 +46,14 @@ window.graphGoal = @graphGoal = (goal) ->
     captureRightClick: true
   plot = $.jqplot("chart", [entryLine], options)
 
+  updateCanvas = ->
+    targets = goal.targets().all()
+    canvasOverlay.draw(plot)    
+
+  App.Target.fetch(updateCanvas)
+
   canvasOverlay = plot.plugins.canvasOverlay;
+  isDragging = false
   currentTargetLine = null
   currentCanvasLine = null
   $('#chart').bind "jqplotMouseDown", (ev, seriesIndex, pointIndex, data) ->
@@ -54,35 +61,41 @@ window.graphGoal = @graphGoal = (goal) ->
       currentTargetLine = findClosestTargetLine(targets, pointIndex.yaxis)
       if currentTargetLine
         currentCanvasLine = canvasOverlay.get(currentTargetLine.value.toString());
+        isDragging = true
 
   $('#chart').bind "jqplotMouseMove", (ev, seriesIndex, pointIndex, data) ->
-    if ev.which == 1
-      if currentTargetLine
-        currentCanvasLine.options.y = pointIndex.yaxis 
-        currentTargetLine.value = pointIndex.yaxis
-        currentTargetLine.save()
-        canvasOverlay.draw(plot);
+    if ev.which == 1 && isDragging
+      currentCanvasLine.options.y = pointIndex.yaxis 
+      currentTargetLine.value = pointIndex.yaxis
+      canvasOverlay.draw(plot)
 
   $('#chart').bind "jqplotMouseUp", (ev, seriesIndex, pointIndex, data) ->
-    if ev.which == 1
-      currentTargetLine = null
+    if ev.which == 1 && isDragging
+      isDragging = false
+      canvasOverlay.objectNames = canvasOverlay.objectNames.filter (name) -> name != currentCanvasLine.options.name
+      currentCanvasLine.options.name = currentTargetLine.value.toString()
+      canvasOverlay.objectNames.push(currentTargetLine.value.toString())
+      currentTargetLine.save()
+      currentTargetLine.bind "save", -> 
+        App.Target.fetch()
 
   $('#chart').bind "jqplotRightClick", (ev, seriesIndex, pointIndex, data) ->
     if ev.which == 3
-      targetLine = findClosestTargetLine(targets, pointIndex.yaxis)
-      if (targetLine)
-        removeCanvasLine(canvasOverlay, targetLine.value.toString())
-        targetLine.destroy()
+      clickedTarget = findClosestTargetLine(targets, pointIndex.yaxis)
+      if (clickedTarget)
+        removeCanvasLine(canvasOverlay, clickedTarget.value.toString())
+        clickedTarget.bind "destroy", ->
+          App.Target.fetch()
+        clickedTarget.destroy()
       else
         newTarget = new App.Target(
           goal_id: goal.id
           value: pointIndex.yaxis
         )
+        newTarget.bind "save", ->
+          canvasOverlay.addHorizontalLine(getHoriztonalLine(newTarget))
+          App.Target.fetch()
         newTarget.save()
-        canvasOverlay.addHorizontalLine(getHoriztonalLine(newTarget))
-        targets.push(newTarget)
-
-      canvasOverlay.draw(plot)    
 
 @removeCanvasLine = (canvasOverlay, targetValue) ->
   newObjects = []
