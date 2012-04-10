@@ -13,7 +13,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require app
+//= require underscore
+//= require backbone
+//= require backbone_rails_sync
+//= require backbone_datalink
+//= require backbone/simple_goal
 //= require_tree .
 //= require jquery.jqplot
 //= require jqplot.cursor.min
