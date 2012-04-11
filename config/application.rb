@@ -60,5 +60,7 @@ module SimpleGoal
       Devise::SessionsController.layout "sign"
       Devise::RegistrationsController.layout "sign"
     end
+
+    config.assets.initialize_on_precompile = false
   end
 end
