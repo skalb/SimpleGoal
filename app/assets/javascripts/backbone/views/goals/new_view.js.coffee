@@ -20,11 +20,13 @@ class SimpleGoal.Views.Goals.NewView extends Backbone.View
 
     @model.unset("errors")
 
+    self = this
+    do (self) ->
+      self.collection.on("sync", (model, collection) ->
+        self.model = model
+        window.location.hash = "/#{self.model.id}"
+      )
     @collection.create(@model.toJSON(),
-      success: (goal) =>
-        @model = goal
-        window.location.hash = "/#{@model.id}"
-
       error: (goal, jqXHR) =>
         @model.set({errors: $.parseJSON(jqXHR.responseText)})
     )

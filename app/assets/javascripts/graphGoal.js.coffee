@@ -1,5 +1,5 @@
 window.graphGoal = @graphGoal = (goal) -> 
-  $('#main').append("<div id=\"chart\" style=\"height:#{document.height * .95}px; width:#{document.width * .95}px;\"></div>")
+  $('#main').append("<div id=\"chart\" style=\"height:#{$(document).height() * .95}px; width:#{$(document).width() * .95}px;\"></div>")
 
   targets = goal.targets.models
   entries = goal.entries.models
@@ -20,7 +20,6 @@ window.graphGoal = @graphGoal = (goal) ->
   yMax = Math.ceil(yMax * 1.1 / 10) * 10
 
   options = 
-    title: goal.attributes.name
     axes:
       xaxis:
         renderer: $.jqplot.DateAxisRenderer
@@ -29,7 +28,7 @@ window.graphGoal = @graphGoal = (goal) ->
       yaxis:
         min: 0
         max: yMax
-        tickInterval: yMax / 10
+        tickInterval: 10
         # tickOptions:
           # formatString: "%.2f"
     # highlighter:
@@ -132,8 +131,10 @@ window.graphGoal = @graphGoal = (goal) ->
         $(this).dialog "close"
       Accept: ->
         $(this).dialog "close"
-        target = new App.Target
+        target = new SimpleGoal.Models.Target(
           value: $('#target').val()
-          date: $('#date').val()
           goal_id: goal.id
-        target.save()
+        )
+        goal.targets.on "sync", ->
+          graphGoal(goal)
+        goal.targets.create(target) 
