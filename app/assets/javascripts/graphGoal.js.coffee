@@ -1,5 +1,5 @@
 window.graphGoal = @graphGoal = (goal) -> 
-  $('#main').append("<div id=\"chart\" style=\"height:#{$(document).height() * .95}px; width:#{$(document).width() * .95}px;\"></div>")
+  $('#main').append("<div id=\"chart\" style=\"height:#{$(document).height() * .90}px; width:#{$(document).width() * .90}px;\"></div>")
 
   targets = goal.targets.models
   entries = goal.entries.models
@@ -53,44 +53,6 @@ window.graphGoal = @graphGoal = (goal) ->
   isDragging = false
   currentTargetLine = null
   currentCanvasLine = null
-  $('#chart').bind "jqplotMouseDown", (ev, seriesIndex, pointIndex, data) ->
-    if ev.which == 1
-      currentTargetLine = findClosestTargetLine(targets, pointIndex.yaxis)
-      if currentTargetLine
-        currentCanvasLine = canvasOverlay.get(currentTargetLine.get("value").toString());
-        isDragging = true
-
-  $('#chart').bind "jqplotMouseMove", (ev, seriesIndex, pointIndex, data) ->
-    if ev.which == 1 && isDragging
-      currentCanvasLine.options.y = pointIndex.yaxis 
-      currentTargetLine.set("value", pointIndex.yaxis)
-      canvasOverlay.draw(plot)
-
-  $('#chart').bind "jqplotMouseUp", (ev, seriesIndex, pointIndex, data) ->
-    if ev.which == 1 && isDragging
-      isDragging = false
-      canvasOverlay.objectNames = canvasOverlay.objectNames.filter (name) -> name != currentCanvasLine.options.name
-      currentCanvasLine.options.name = currentTargetLine.get("value").toString()
-      canvasOverlay.objectNames.push(currentTargetLine.get("value").toString())
-      currentTargetLine.save()
-
-  $('#chart').bind "jqplotRightClick", (ev, seriesIndex, pointIndex, data) ->
-    if ev.which == 3
-      clickedTarget = findClosestTargetLine(targets, pointIndex.yaxis)
-      if (clickedTarget)
-        removeCanvasLine(canvasOverlay, clickedTarget.get("value").toString())
-        goal.targets.remove(clickedTarget)
-        clickedTarget.destroy()
-        canvasOverlay.draw(plot)
-      else
-        newTarget = new SimpleGoal.Models.Target(
-          goal_id: goal.id
-          value: pointIndex.yaxis
-        )
-        goal.targets.on "sync", ->
-          canvasOverlay.addHorizontalLine(getHoriztonalLine(newTarget))
-          canvasOverlay.draw(plot)
-        goal.targets.create(newTarget)
 
 @removeCanvasLine = (canvasOverlay, targetValue) ->
   newObjects = []
@@ -112,23 +74,11 @@ window.graphGoal = @graphGoal = (goal) ->
   shadow: true
   xOffset: 0  
 
-@findClosestTargetLine = (targets, y) ->
-  min = Number.MAX_VALUE
-  for target in targets
-    dist = Math.abs(target.get("value") - y)
-    if (dist < min)
-      min = dist
-      minTarget = target
-
-  if (min < 1.0) then return minTarget else return null
-
 @getFirstTarget = (goal) ->
   $("#popupDialog").show().dialog
     modal: true
     autoOpen: true
     buttons:
-      Cancel: ->
-        $(this).dialog "close"
       Accept: ->
         $(this).dialog "close"
         target = new SimpleGoal.Models.Target(
@@ -136,5 +86,6 @@ window.graphGoal = @graphGoal = (goal) ->
           goal_id: goal.id
         )
         goal.targets.on "sync", ->
-          graphGoal(goal)
+          goal.targets.fetch success: ->
+            graphGoal(goal)
         goal.targets.create(target) 
